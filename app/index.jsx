@@ -30,7 +30,7 @@ const MainMenu = () => {
         <TouchableOpacity style={styles.button} onPress={() => router.push('/play4x4')}>
           <Text style={styles.buttonText}>Play 4x4</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/play-5x5')}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/play5x5')}>
           <Text style={styles.buttonText}>Play 5x5</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => router.push('/highScores')}>

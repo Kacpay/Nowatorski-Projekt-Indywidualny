@@ -1,10 +1,10 @@
 import React, { useContext, useState, } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { ThemeContext } from '@/context/ThemeContext';
-import Board4x4 from '@/components/Board4x4'
+import Board5x5 from '@/components/Board5x5'
 import { useRouter } from "expo-router";
 
-const Play4x4 = () => {
+const Play5x5 = () => {
     const { colorScheme, theme } = useContext(ThemeContext);
     const styles = createStyles(theme, colorScheme);
     const [showImages, setShowImages] = useState(true);
@@ -26,7 +26,7 @@ const Play4x4 = () => {
                 style={styles.logo}
             />
             <View style={styles.gameArea}>
-                <Board4x4 showImages={showImages} />
+                <Board5x5 showImages={showImages} />
             </View>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.button} onPress={() => router.push('/')}>
@@ -95,4 +95,4 @@ function createStyles(theme, colorScheme) {
     });
 }
 
-export default Play4x4;
+export default Play5x5;
