@@ -1,14 +1,36 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Dialog from "react-native-dialog";
 import { ThemeContext } from '@/context/ThemeContext';
 
 const Board4x4 = (props) => {
-  const { colorScheme, theme } = useContext(ThemeContext);
+  const { colorScheme } = useContext(ThemeContext);
 
   const initialBoard = [1, 2, 3, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   const solution = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
   const [board, setBoard] = useState(initialBoard);
+  const [startTime, setStartTime] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState(null);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [playerName, setPlayerName] = useState('');
+
+  useEffect(() => {
+    setStartTime(Date.now());
+  }, []);
+
+  const saveScore = async (name, time, type) => {
+    try {
+      const newScore = { name, time, type };
+      const storedScores = await AsyncStorage.getItem('scores');
+      const updatedScores = storedScores ? JSON.parse(storedScores) : [];
+      updatedScores.push(newScore);
+      await AsyncStorage.setItem('scores', JSON.stringify(updatedScores));
+    } catch (error) {
+      console.error('Błąd podczas zapisywania wyniku:', error);
+    }
+  };
 
   const isNeighbor = (index1, index2) => {
     const row1 = Math.floor(index1 / 4);
@@ -22,12 +44,10 @@ const Board4x4 = (props) => {
     );
   };
 
-
   const handlePress = (index) => {
     const zeroIndex = board.indexOf(0);
     if (isNeighbor(index, zeroIndex)) {
       const newBoard = [...board];
-      // Zamiana miejscami elementu klikniętego i elementu o indeksie 0
       [newBoard[zeroIndex], newBoard[index]] = [newBoard[index], newBoard[zeroIndex]];
       setBoard(newBoard);
     }
@@ -36,12 +56,24 @@ const Board4x4 = (props) => {
   useEffect(() => {
     const isSolution = board.every((value, index) => value === solution[index]);
     if (isSolution) {
-      setTimeout(() => {
-        Alert.alert('Gratulacje!', 'Udało Ci się ułożyć płytki! Resetowanie planszy...');
-        setBoard(initialBoard);
-      }, 200);
+      const endTime = Date.now();
+      const timeTaken = Math.round((endTime - startTime) / 1000);
+      setElapsedTime(timeTaken);
+      setDialogVisible(true);
     }
   }, [board]);
+
+  const handleDialogSubmit = () => {
+    if (playerName.trim()) {
+      saveScore(playerName, elapsedTime, '4x4');
+      setDialogVisible(false);
+      setBoard(initialBoard);
+      setStartTime(Date.now());
+      setPlayerName('');
+    } else {
+      Alert.alert('Uwaga', 'Podaj swoje imię przed zapisaniem wyniku.');
+    }
+  };
 
   const images = {
     1: require('@/assets/images/space/4x4/2.jpg'),
@@ -79,18 +111,15 @@ const Board4x4 = (props) => {
     15: require('@/assets/images/nature/4x4/16.jpg'),
   };
 
-
   const renderTile = (value, index) => {
     if (value === 0) {
-      return null; // Pusty kafelek (0) nie ma zawartości
+      return null;
     }
 
     if (props.showImages && images[value]) {
       return (
-        <Image 
-          source={colorScheme === 'space' 
-            ? images[value]
-            : imagesNature[value]}
+        <Image
+          source={colorScheme === 'space' ? images[value] : imagesNature[value]}
           style={styles.tileImage}
           resizeMode="contain"
         />
@@ -111,10 +140,22 @@ const Board4x4 = (props) => {
           {renderTile(value, index)}
         </TouchableOpacity>
       ))}
+      <Dialog.Container visible={dialogVisible}>
+        <Dialog.Title>Gratulacje!</Dialog.Title>
+        <Dialog.Description>
+          Udało Ci się ułożyć płytki w {elapsedTime} sekund. Podaj swoje imię, aby zapisać wynik.
+        </Dialog.Description>
+        <Dialog.Input
+          placeholder="Twoje imię"
+          value={playerName}
+          onChangeText={setPlayerName}
+        />
+        <Dialog.Button label="Anuluj" onPress={() => setDialogVisible(false)} />
+        <Dialog.Button label="Zapisz" onPress={handleDialogSubmit} />
+      </Dialog.Container>
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -144,4 +185,5 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
+
 export default Board4x4;

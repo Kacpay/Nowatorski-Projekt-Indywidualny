@@ -33,7 +33,7 @@ const MainMenu = () => {
         <TouchableOpacity style={styles.button} onPress={() => router.push('/play-5x5')}>
           <Text style={styles.buttonText}>Play 5x5</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/high-scores')}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/highScores')}>
           <Text style={styles.buttonText}>High Scores</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => router.push('/exit')}>
