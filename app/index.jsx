@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import { Text, Image, StyleSheet, TouchableOpacity, ImageBackground, View } from 'react-native';
 import { ThemeContext } from '@/context/ThemeContext';
+import { useRouter } from "expo-router";
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const MainMenu = () => {
   const { colorScheme, setColorScheme, theme } = useContext(ThemeContext)
+  const router = useRouter()
   const toggleTheme = () => {
     setColorScheme(colorScheme === 'space' ? 'nature' : 'space');
   };
@@ -24,18 +26,17 @@ const MainMenu = () => {
         style={styles.titleImage}
       />
       
-      {/* Przyciski menu */}
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => console.log('Play 4x4')}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/play4x4')}>
           <Text style={styles.buttonText}>Play 4x4</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => console.log('Play 5x5')}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/play-5x5')}>
           <Text style={styles.buttonText}>Play 5x5</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => console.log('High Scores')}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/high-scores')}>
           <Text style={styles.buttonText}>High Scores</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => console.log('Exit')}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/exit')}>
           <Text style={styles.buttonText}>Exit</Text>
         </TouchableOpacity>
       </View>

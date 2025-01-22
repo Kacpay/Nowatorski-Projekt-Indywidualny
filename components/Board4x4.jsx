@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const Board4x4 = () => {
-  // Inicjalizacja planszy 4x4 z indeksami od 0 do 15
   const [board, setBoard] = useState(Array.from({ length: 16 }, (_, i) => i));
 
-  // Funkcja sprawdzająca, czy indeksy sąsiadują ze sobą
   const isNeighbor = (index1, index2) => {
     const row1 = Math.floor(index1 / 4);
     const col1 = index1 % 4;
@@ -13,12 +11,12 @@ const Board4x4 = () => {
     const col2 = index2 % 4;
 
     return (
-      (Math.abs(row1 - row2) === 1 && col1 === col2) || // Sąsiedztwo w pionie
-      (Math.abs(col1 - col2) === 1 && row1 === row2)    // Sąsiedztwo w poziomie
+      (Math.abs(row1 - row2) === 1 && col1 === col2) ||
+      (Math.abs(col1 - col2) === 1 && row1 === row2) 
     );
   };
 
-  // Funkcja obsługująca kliknięcie komponentu
+  
   const handlePress = (index) => {
     const zeroIndex = board.indexOf(0);
     if (isNeighbor(index, zeroIndex)) {
@@ -34,7 +32,7 @@ const Board4x4 = () => {
       {board.map((value, index) => (
         <TouchableOpacity
           key={index}
-          style={[styles.tile, value === 0 && styles.zeroTile]} // Styl dla elementu 0
+          style={[styles.tile, value === 0 && styles.zeroTile]}
           onPress={() => handlePress(index)}
         >
           <Text style={styles.tileText}>{value !== 0 ? value : ''}</Text>
@@ -46,14 +44,14 @@ const Board4x4 = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 200,
-    height: 200,
+    width: '100%',
+    height: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   tile: {
-    width: 50,
-    height: 50,
+    width: '25%',
+    height: '25%',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
@@ -61,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
   },
   zeroTile: {
-    backgroundColor: '#bbb',
+    backgroundColor: 'rgba(0, 0, 0, 0.52)',
   },
   tileText: {
     fontSize: 18,
